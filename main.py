@@ -224,4 +224,9 @@ def detect_text(message: Message):
 print("Bot lancé…")
 bot.infinity_polling(timeout=60, long_polling_timeout=60)
 
+if __name__ == "__main__":
+    print("Bot opérationnel")
+    bot.infinity_polling(timeout=10, long_polling_timeout=5)
+
+
 
