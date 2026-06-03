@@ -4,7 +4,7 @@ from telebot.types import Message
 # ============================
 #   TOKEN
 # ============================
-TOKEN = "TON_TOKEN_ICI"  # Remets ton token ici
+TOKEN = "8982899307:AAEFJQmjcT2JnnUOqizbMFlxMVGbWG-B8-0"  # Remets ton token ici
 bot = telebot.TeleBot(TOKEN)
 
 # ============================
