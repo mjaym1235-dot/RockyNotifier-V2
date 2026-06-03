@@ -1,5 +1,5 @@
 # -----------------------------
-#   ROCKY NOTIFIER BOT V2 – WEBHOOK (VERSION FINALE)
+#   ROCKY NOTIFIER BOT – WEBHOOK (VERSION FINALE AVEC TOUS LES TEXTES)
 # -----------------------------
 
 import telebot
@@ -18,7 +18,7 @@ bot = telebot.TeleBot(TOKEN)
 WEBHOOK_URL = "https://rockynotifier-v2-1.onrender.com/webhook"
 
 # ============================
-#   KEEP ALIVE (ANTI-VEILLE)
+#   KEEP ALIVE
 # ============================
 def keep_alive():
     while True:
@@ -117,6 +117,8 @@ def war_cmd(message: Message):
     text = (
         "🟥🟥🟥  G U E R R E  🟥🟥🟥\n"
         "🟥🟥🟥  G U E R R A  🟥🟥🟥\n\n"
+        "🔥 La bataille commence maintenant.\n"
+        "🔥 La battaglia inizia adesso.\n\n"
         + get_admin_mentions(chat_id)
     )
     bot.send_photo(chat_id, IMAGE_WAR, caption=text)
@@ -124,14 +126,19 @@ def war_cmd(message: Message):
 @bot.message_handler(commands=['command'])
 def command_list(message: Message):
     text = (
-        "📜 Commandes disponibles :\n\n"
-        "/start – Vérifier si le bot fonctionne\n"
-        "/war – Alerte guerre (image + mentions)\n"
-        "/all – Mentionner les admins\n"
-        "/tower – Infos tours (image + mentions)\n"
-        "/cap – Zones capturables (image + mentions)\n"
-        "/getid – Obtenir le File ID d’une image\n"
-        "/getid2 – Dernière image reçue\n"
+        "📜 Commandes disponibles / Comandi disponibili :\n\n"
+        
+        "🇫🇷 /start – Vérifier si le bot fonctionne\n"
+        "🇫🇷 /war – Alerte guerre (image + FR/ITA + mentions)\n"
+        "🇫🇷 /all – Mentionner les admins\n"
+        "🇫🇷 /tower – Infos tours (image + mentions)\n"
+        "🇫🇷 /cap – Zones capturables (image + mentions)\n\n"
+        
+        "🇮🇹 /start – Verificare se il bot funziona\n"
+        "🇮🇹 /war – Allerta guerra (immagine + FR/ITA + menzioni)\n"
+        "🇮🇹 /all – Menzionare gli admin\n"
+        "🇮🇹 /tower – Info torri (immagine + menzioni)\n"
+        "🇮🇹 /cap – Zone catturabili (immagine + menzioni)\n"
     )
     bot.reply_to(message, text)
 
@@ -143,12 +150,14 @@ def mention_all(message: Message):
 @bot.message_handler(commands=['tower'])
 def tower(message: Message):
     chat_id = message.chat.id
-    bot.send_photo(chat_id, IMAGE_TOWER, caption=get_admin_mentions(chat_id))
+    text = "🗼 Tour / Torre :\n" + get_admin_mentions(chat_id)
+    bot.send_photo(chat_id, IMAGE_TOWER, caption=text)
 
 @bot.message_handler(commands=['cap'])
 def cap(message: Message):
     chat_id = message.chat.id
-    bot.send_photo(chat_id, IMAGE_CAP, caption=get_admin_mentions(chat_id))
+    text = "🏗️ Capture en cours / Cattura in corso :\n" + get_admin_mentions(chat_id)
+    bot.send_photo(chat_id, IMAGE_CAP, caption=text)
 
 @bot.message_handler(content_types=['sticker'])
 def detect_sticker(message: Message):
@@ -183,6 +192,7 @@ if __name__ == "__main__":
     bot.set_webhook(url=WEBHOOK_URL)
 
     app.run(host='0.0.0.0', port=8080)
+
 
 
 
