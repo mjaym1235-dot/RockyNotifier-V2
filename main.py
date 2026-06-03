@@ -12,7 +12,7 @@ import time
 # ============================
 #   TOKEN
 # ============================
-TOKEN = "8982899307:AAEFJQmjcT2JnnUOqizbMFlxMVGbWG-B8-0"
+TOKEN = "TON_TOKEN_ICI"  # Mets ton token ici
 bot = telebot.TeleBot(TOKEN)
 
 WEBHOOK_URL = "https://rockynotifier-v2-1.onrender.com/webhook"
@@ -111,24 +111,23 @@ def get_id2(message: Message):
 def start(message: Message):
     bot.reply_to(message, "Bot opérationnel ! 👌\nUtilise /command pour voir les commandes.")
 
+# ============================
+#   /WAR — VERSION HTML
+# ============================
 @bot.message_handler(commands=['war'])
 def war_cmd(message: Message):
     chat_id = message.chat.id
     full = message.text
-
-    # On enlève la commande /war mais on garde tout le reste
     cleaned = full.replace("/war", "").strip()
 
-    # Texte de base
     alert = (
         "🟥🟥🟥  <b>G U E R R E</b>  🟥🟥🟥\n"
         "🟥🟥🟥  <b>G U E R R A</b>  🟥🟥🟥\n\n"
         f"{get_admin_mentions(chat_id)}"
     )
 
-    # Si tu ajoutes un texte → on le met en mode ALERTE VISUELLE
     if cleaned:
-        cleaned = cleaned.upper()  # Majuscules
+        cleaned = cleaned.upper()
         cleaned = f"🚨🚨🚨 <b>{cleaned}</b> 🚨🚨🚨"
         final_text = f"{cleaned}\n\n{alert}"
     else:
@@ -136,36 +135,41 @@ def war_cmd(message: Message):
 
     bot.send_photo(chat_id, IMAGE_WAR, caption=final_text, parse_mode="HTML")
 
-@bot.message_handler(commands=['command'])
-def command_list(message: Message):
-    text = (
-        "📜 Commandes disponibles / Comandi disponibili :\n\n"
-        
-        "🇫🇷 /start – Vérifier si le bot fonctionne\n"
-        "🇫🇷 /war – Alerte guerre (image + FR/ITA + mentions)\n"
-        "🇫🇷 /all – Mentionner les admins\n"
-        "🇫🇷 /tower – Infos tours (image + mentions)\n"
-        "🇫🇷 /cap – Zones capturables (image + mentions)\n\n"
-        
-        "🇮🇹 /start – Verificare se il bot funziona\n"
-        "🇮🇹 /war – Allerta guerra (immagine + FR/ITA + menzioni)\n"
-        "🇮🇹 /all – Menzionare gli admin\n"
-        "🇮🇹 /tower – Info torri (immagine + menzioni)\n"
-        "🇮🇹 /cap – Zone catturabili (immagine + menzioni)\n"
-    )
-    bot.reply_to(message, text)
+# ============================
+#   /CAP — VERSION HTML (ÉTOILES)
+# ============================
+@bot.message_handler(commands=['cap'])
+def cap(message: Message):
+    chat_id = message.chat.id
+    full = message.text
+    cleaned = full.replace("/cap", "").strip()
 
+    base = (
+        "⭐ <b>C A P T U R E</b> ⭐\n"
+        "⭐ <b>C A T T U R A</b> ⭐\n\n"
+        f"{get_admin_mentions(chat_id)}"
+    )
+
+    if cleaned:
+        cleaned = cleaned.upper()
+        cleaned = f"⭐ <b>{cleaned}</b> ⭐"
+        final_text = f"{cleaned}\n\n{base}"
+    else:
+        final_text = base
+
+    bot.send_photo(chat_id, IMAGE_CAP, caption=final_text, parse_mode="HTML")
+
+# ============================
+#   /ALL — TEXTE AVANT + APRÈS
+# ============================
 @bot.message_handler(commands=['all'])
 def mention_all(message: Message):
     chat_id = message.chat.id
     full = message.text
-
-    # On enlève la commande /all mais on garde tout le reste
     cleaned = full.replace("/all", "").strip()
 
     mentions = get_admin_mentions(chat_id)
 
-    # Combine texte avant + mentions + texte après
     if cleaned:
         final_text = f"{cleaned}\n{mentions}"
     else:
@@ -173,17 +177,26 @@ def mention_all(message: Message):
 
     bot.send_message(chat_id, final_text)
 
+# ============================
+#   AUTRES COMMANDES
+# ============================
 @bot.message_handler(commands=['tower'])
 def tower(message: Message):
     chat_id = message.chat.id
     text = "🗼 Tour / Torre :\n" + get_admin_mentions(chat_id)
     bot.send_photo(chat_id, IMAGE_TOWER, caption=text)
 
-@bot.message_handler(commands=['cap'])
-def cap(message: Message):
-    chat_id = message.chat.id
-    text = "🏗️ Capture en cours / Cattura in corso :\n" + get_admin_mentions(chat_id)
-    bot.send_photo(chat_id, IMAGE_CAP, caption=text)
+@bot.message_handler(commands=['command'])
+def command_list(message: Message):
+    text = (
+        "📜 Commandes disponibles :\n\n"
+        "/war – Alerte guerre\n"
+        "/cap – Capture\n"
+        "/all – Mention admins\n"
+        "/tower – Infos tours\n"
+        "/cap – Zones capturables\n"
+    )
+    bot.reply_to(message, text)
 
 @bot.message_handler(content_types=['sticker'])
 def detect_sticker(message: Message):
@@ -218,6 +231,7 @@ if __name__ == "__main__":
     bot.set_webhook(url=WEBHOOK_URL)
 
     app.run(host='0.0.0.0', port=8080)
+
 
 
 
