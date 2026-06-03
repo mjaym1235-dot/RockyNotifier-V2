@@ -1,11 +1,27 @@
 import telebot
 from telebot.types import Message
+import threading
+import time
+import requests
 
 # ============================
 #   TOKEN
 # ============================
 TOKEN = "8982899307:AAEFJQmjcT2JnnUOqizbMFlxMVGbWG-B8-0"  # Remets ton vrai token ici
 bot = telebot.TeleBot(TOKEN)
+
+# ============================
+#   KEEP ALIVE (toutes les 5 minutes)
+# ============================
+
+def keep_alive():
+    while True:
+        try:
+            requests.get("https://rockynotifier-v2-1.onrender.com")
+        except:
+            pass
+        time.sleep(300)  # 300 sec = 5 minutes
+
 
 # ============================
 #   IMAGES (FILE_ID)
@@ -189,9 +205,13 @@ def detect_text(message: Message):
 
 print("Bot lancé…")
 
+# Lancement du keep-alive
+threading.Thread(target=keep_alive, daemon=True).start()
+
 if __name__ == "__main__":
     print("Bot opérationnel")
     bot.infinity_polling(timeout=60, long_polling_timeout=60)
+
 
 
 
