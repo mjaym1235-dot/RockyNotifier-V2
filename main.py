@@ -1,5 +1,5 @@
 # -----------------------------
-#   ROCKY NOTIFIER BOT – WEBHOOK (VERSION FINALE AVEC TOUS LES TEXTES)
+#   ROCKY NOTIFIER BOT – WEBHOOK (VERSION FINALE)
 # -----------------------------
 
 import telebot
@@ -12,7 +12,7 @@ import time
 # ============================
 #   TOKEN
 # ============================
-TOKEN = "8982899307:AAEFJQmjcT2JnnUOqizbMFlxMVGbWG-B8-0"
+TOKEN = "TON_TOKEN_ICI"  # Remplace par ton vrai token
 bot = telebot.TeleBot(TOKEN)
 
 WEBHOOK_URL = "https://rockynotifier-v2-1.onrender.com/webhook"
@@ -121,20 +121,20 @@ def war_cmd(message: Message):
 
     # Texte de base
     alert = (
-        "  G U E R R E  \n"
-        "  G U E R R A  \n\n"
+        "🟥🟥🟥  <b>G U E R R E</b>  🟥🟥🟥\n"
+        "🟥🟥🟥  <b>G U E R R A</b>  🟥🟥🟥\n\n"
         f"{get_admin_mentions(chat_id)}"
     )
 
     # Si tu ajoutes un texte → on le met en mode ALERTE VISUELLE
     if cleaned:
         cleaned = cleaned.upper()  # Majuscules
-        cleaned = f" {cleaned} "
+        cleaned = f"🚨🚨🚨 <b>{cleaned}</b> 🚨🚨🚨"
         final_text = f"{cleaned}\n\n{alert}"
     else:
         final_text = alert
 
-    bot.send_photo(chat_id, IMAGE_WAR, caption=final_text, parse_mode="Markdown")
+    bot.send_photo(chat_id, IMAGE_WAR, caption=final_text, parse_mode="HTML")
 
 @bot.message_handler(commands=['command'])
 def command_list(message: Message):
@@ -218,6 +218,7 @@ if __name__ == "__main__":
     bot.set_webhook(url=WEBHOOK_URL)
 
     app.run(host='0.0.0.0', port=8080)
+
 
 
 
