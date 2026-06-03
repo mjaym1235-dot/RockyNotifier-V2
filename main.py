@@ -165,6 +165,14 @@ def detect_text(message: Message):
     bot.reply_to(message, f"💬 Tu as dit : {message.text}")
 
 # ============================
+@bot.message_handler(commands=['getid'])
+def get_id(message):
+    if message.reply_to_message and message.reply_to_message.photo:
+        file_id = message.reply_to_message.photo[-1].file_id
+        bot.reply_to_message(message, f"File ID : {file_id}")
+    else:
+        bot.reply_to_message(message, "Réponds à une image avec /getid.")
+
 #   LANCEMENT DU BOT
 # ============================
 
