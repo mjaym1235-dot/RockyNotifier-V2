@@ -1,32 +1,38 @@
+# -----------------------------
+#   ROCKY NOTIFIER BOT V2 – WEBHOOK (VERSION FINALE)
+# -----------------------------
+
 import telebot
 from telebot.types import Message
+from flask import Flask, request
 import threading
-import time
 import requests
+import time
 
 # ============================
 #   TOKEN
 # ============================
-TOKEN = "8982899307:AAEFJQmjcT2JnnUOqizbMFlxMVGbWG-B8-0"  # Remets ton vrai token ici
+TOKEN = "8982899307:AAEFJQmjcT2JnnUOqizbMFlxMVGbWG-B8-0"
 bot = telebot.TeleBot(TOKEN)
 
-# ============================
-#   KEEP ALIVE (toutes les 5 minutes)
-# ============================
+WEBHOOK_URL = "https://rockynotifier-v2-1.onrender.com/webhook"
 
+# ============================
+#   KEEP ALIVE (ANTI-VEILLE)
+# ============================
 def keep_alive():
     while True:
         try:
-            requests.get("https://rockynotifier-v2-1.onrender.com")
+            requests.get("https://rockynotifier-v2-1.onrender.com/")
         except:
             pass
-        time.sleep(300)  # 300 sec = 5 minutes
+        time.sleep(300)
 
+threading.Thread(target=keep_alive, daemon=True).start()
 
 # ============================
 #   IMAGES (FILE_ID)
 # ============================
-
 IMAGE_WAR = "AgACAgQAAxkBAAMXah_MDQX4s5kTHdtT3wkfsLQaEtQAAgsOaxtCV_lQbciX-WrPk5IBAAMCAAN4AAM7BA"
 IMAGE_TOWER = "AgACAgQAAxkBAAM9ah_Rk8dMLVS5PBlCtQ138HBEXbIAAg8OaxtCV_lQ9Pmok24OOQ0BAAMCAANtAAM7BA"
 IMAGE_CAP = "AgACAgQAAxkBAANBah_Y2KOjhTeoD0lgRxOPFlOKmIwAAhUOaxtCV_lQLTOTg-NKrkgBAAMCAAN4AAM7BA"
@@ -34,7 +40,6 @@ IMAGE_CAP = "AgACAgQAAxkBAANBah_Y2KOjhTeoD0lgRxOPFlOKmIwAAhUOaxtCV_lQLTOTg-NKrkg
 # ============================
 #   FONCTION MENTION ADMINS
 # ============================
-
 def get_admin_mentions(chat_id):
     try:
         chat = bot.get_chat(chat_id)
@@ -42,12 +47,12 @@ def get_admin_mentions(chat_id):
             return ""
 
         members = bot.get_chat_administrators(chat_id)
-        text = "👑 Mention des admins :\n"
+        text = ""
         for m in members:
             if m.user.username:
-                text += f"@{m.user.username}\n"
+                text += f"@{m.user.username} "
             else:
-                text += f"{m.user.first_name}\n"
+                text += f"{m.user.first_name} "
         return text
 
     except Exception as e:
@@ -57,7 +62,6 @@ def get_admin_mentions(chat_id):
 # ============================
 #   /GETID — RÉPONSE À UNE IMAGE
 # ============================
-
 @bot.message_handler(commands=['getid'])
 def get_id(message: Message):
     if message.reply_to_message and message.reply_to_message.photo:
@@ -69,12 +73,7 @@ def get_id(message: Message):
 # ============================
 #   /GETID2 — DERNIÈRE IMAGE
 # ============================
-
 last_photo_id = {}
-
-# ============================
-#   DÉTECTION D’IMAGES
-# ============================
 
 @bot.message_handler(content_types=['photo'])
 def detect_photo(message: Message):
@@ -106,111 +105,85 @@ def get_id2(message: Message):
         bot.reply_to(message, "Aucune image reçue récemment.")
 
 # ============================
-#   /START
+#   COMMANDES
 # ============================
-
 @bot.message_handler(commands=['start'])
 def start(message: Message):
     bot.reply_to(message, "Bot opérationnel ! 👌\nUtilise /command pour voir les commandes.")
 
-# ============================
-#   /WAR — ALERTE GUERRE (EX-HELP)
-# ============================
-
 @bot.message_handler(commands=['war'])
 def war_cmd(message: Message):
     chat_id = message.chat.id
-
     text = (
         "🟥🟥🟥  G U E R R E  🟥🟥🟥\n"
         "🟥🟥🟥  G U E R R A  🟥🟥🟥\n\n"
-        "🔥 La bataille commence maintenant.\n"
-        "🔥 La battaglia inizia adesso.\n\n"
         + get_admin_mentions(chat_id)
     )
-
     bot.send_photo(chat_id, IMAGE_WAR, caption=text)
-
-# ============================
-#   /COMMAND — LISTE FR + ITA
-# ============================
 
 @bot.message_handler(commands=['command'])
 def command_list(message: Message):
     text = (
-        "📜 Commandes disponibles / Comandi disponibili :\n\n"
-        
-        "🇫🇷 /start – Vérifier si le bot fonctionne\n"
-        "🇫🇷 /war – Alerte guerre (image + FR/ITA + mentions)\n"
-        "🇫🇷 /all – Mentionner les admins\n"
-        "🇫🇷 /tower – Infos tours (image + mentions)\n"
-        "🇫🇷 /cap – Zones capturables (image + mentions)\n\n"
-        
-        "🇮🇹 /start – Verificare se il bot funziona\n"
-        "🇮🇹 /war – Allerta guerra (immagine + FR/ITA + menzioni)\n"
-        "🇮🇹 /all – Menzionare gli admin\n"
-        "🇮🇹 /tower – Info torri (immagine + menzioni)\n"
-        "🇮🇹 /cap – Zone catturabili (immagine + menzioni)\n"
+        "📜 Commandes disponibles :\n\n"
+        "/start – Vérifier si le bot fonctionne\n"
+        "/war – Alerte guerre (image + mentions)\n"
+        "/all – Mentionner les admins\n"
+        "/tower – Infos tours (image + mentions)\n"
+        "/cap – Zones capturables (image + mentions)\n"
+        "/getid – Obtenir le File ID d’une image\n"
+        "/getid2 – Dernière image reçue\n"
     )
     bot.reply_to(message, text)
-
-# ============================
-#   /ALL
-# ============================
 
 @bot.message_handler(commands=['all'])
 def mention_all(message: Message):
     chat_id = message.chat.id
     bot.send_message(chat_id, get_admin_mentions(chat_id))
 
-# ============================
-#   /TOWER
-# ============================
-
 @bot.message_handler(commands=['tower'])
 def tower(message: Message):
     chat_id = message.chat.id
-    text = "🗼 Tour / Torre :\n" + get_admin_mentions(chat_id)
-    bot.send_photo(chat_id, IMAGE_TOWER, caption=text)
-
-# ============================
-#   /CAP
-# ============================
+    bot.send_photo(chat_id, IMAGE_TOWER, caption=get_admin_mentions(chat_id))
 
 @bot.message_handler(commands=['cap'])
 def cap(message: Message):
     chat_id = message.chat.id
-    text = "🏗️ Capture en cours / Cattura in corso :\n" + get_admin_mentions(chat_id)
-    bot.send_photo(chat_id, IMAGE_CAP, caption=text)
-
-# ============================
-#   STICKERS
-# ============================
+    bot.send_photo(chat_id, IMAGE_CAP, caption=get_admin_mentions(chat_id))
 
 @bot.message_handler(content_types=['sticker'])
 def detect_sticker(message: Message):
     bot.reply_to(message, "✨ Sticker reçu !")
-
-# ============================
-#   TEXTE
-# ============================
 
 @bot.message_handler(content_types=['text'])
 def detect_text(message: Message):
     bot.reply_to(message, f"💬 Tu as dit : {message.text}")
 
 # ============================
-#   LANCEMENT DU BOT
+#   FLASK (WEBHOOK)
 # ============================
+app = Flask(__name__)
 
-print("Bot lancé…")
+@app.route('/', methods=['GET'])
+def home():
+    return "Bot actif 24/7 via webhook !"
 
-# Lancement du keep-alive
-threading.Thread(target=keep_alive, daemon=True).start()
+@app.route('/webhook', methods=['POST'])
+def webhook():
+    json_str = request.get_data().decode('UTF-8')
+    update = telebot.types.Update.de_json(json_str)
+    bot.process_new_updates([update])
+    return "OK", 200
 
+# ============================
+#   LANCEMENT
+# ============================
 if __name__ == "__main__":
-    print("Bot opérationnel")
-    bot.infinity_polling(timeout=60, long_polling_timeout=60)
+    bot.remove_webhook()
+    time.sleep(1)
+    bot.set_webhook(url=WEBHOOK_URL)
+
+    app.run(host='0.0.0.0', port=8080)
+
 
 
 
