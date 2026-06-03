@@ -156,14 +156,11 @@ def tower(message: Message):
     chat_id = message.chat.id
 
     text = (
-        "🗼 Tour actuelle / Torre attuale :\n"
-        "• Niveau / Livello : 12\n"
-        "• Défense / Difesa : 3400\n"
-        "• Bonus armée / Bonus esercito : +18%\n\n"
+        "🗼 Tour / Torre :\n"
         + get_admin_mentions(chat_id)
     )
-
-    bot.send_photo(chat_id, IMAGE_TOWER, caption=text)
+        
+bot.send_photo(chat_id, IMAGE_TOWER, caption=text)
 
 # ============================
 #   /CAP — IMAGE + TEXTE + ALL
@@ -175,8 +172,6 @@ def cap(message: Message):
 
     text = (
         "🏗️ Capture en cours / Cattura in corso :\n"
-        "• Caserne niv. 9 → 2h restantes\n"
-        "• Mura → 45 min\n\n"
         + get_admin_mentions(chat_id)
     )
 
