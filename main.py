@@ -13,7 +13,7 @@ bot = telebot.TeleBot(TOKEN)
 
 IMAGE_WAR ="AgACAgQAAxkBAAMXah_MDQX4s5kTHdtT3wkfsLQaEtQAAgsOaxtCV_lQbciX-WrPk5IBAAMCAAN4AAM7BA" # file_id de l'image GUERRE
 IMAGE_TOWER = "AgACAgQAAxkBAAM9ah_Rk8dMLVS5PBlCtQ138HBEXbIAAg8OaxtCV_lQ9Pmok24OOQ0BAAMCAANtAAM7BA" # file_id de l'image TOUR
-IMAGE_BUILD = ""     # file_id de l'image CONSTRUCTION
+IMAGE_CAP = "AgACAgQAAxkBAANBah_Y2KOjhTeoD0lgRxOPFlOKmIwAAhUOaxtCV_lQLTOTg-NKrkgBAAMCAAN4AAM7BA" # file_id de l'image CONSTRUCTION
 
 # ============================
 #   FONCTION MENTION ADMINS
@@ -161,21 +161,21 @@ def tower(message: Message):
     bot.send_photo(chat_id, IMAGE_TOWER, caption=text)
 
 # ============================
-#   /BUILD — IMAGE + TEXTE + ALL
+#   /CAP — IMAGE + TEXTE + ALL
 # ============================
 
-@bot.message_handler(commands=['build'])
-def build(message: Message):
+@bot.message_handler(commands=['cap'])
+def cap(message: Message):
     chat_id = message.chat.id
 
     text = (
-        "🏗️ Construction en cours / Costruzione in corso :\n"
+        "🏗️ Capture en cours / Cattura in corso :\n"
         "• Caserne niv. 9 → 2h restantes\n"
         "• Mura → 45 min\n\n"
         + get_admin_mentions(chat_id)
     )
 
-    bot.send_photo(chat_id, IMAGE_BUILD, caption=text)
+    bot.send_photo(chat_id, IMAGE_CAP, caption=text)
 
 # ============================
 #   DÉTECTION D’IMAGES + COMMANDES
