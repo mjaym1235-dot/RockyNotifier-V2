@@ -12,7 +12,7 @@ bot = telebot.TeleBot(TOKEN)
 # ============================
 
 IMAGE_WAR ="AgACAgQAAxkBAAMXah_MDQX4s5kTHdtT3wkfsLQaEtQAAgsOaxtCV_lQbciX-WrPk5IBAAMCAAN4AAM7BA" # file_id de l'image GUERRE
-IMAGE_TOWER = ""     # file_id de l'image TOUR
+IMAGE_TOWER = "AgACAgQAAxkBAAM9ah_Rk8dMLVS5PBlCtQ138HBEXbIAAg8OaxtCV_lQ9Pmok24OOQ0BAAMCAANtAAM7BA" # file_id de l'image TOUR
 IMAGE_BUILD = ""     # file_id de l'image CONSTRUCTION
 
 # ============================
