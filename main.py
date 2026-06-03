@@ -11,7 +11,7 @@ bot = telebot.TeleBot(TOKEN)
 #   IMAGES (À REMPLIR AVEC FILE_ID)
 # ============================
 
-IMAGE_WAR = ""       # file_id de l'image GUERRE
+IMAGE_WAR ="AgACAgQAAxkBAAMXah_MDQX4s5kTHdtT3wkfsLQaEtQAAgsOaxtCV_lQbciX-WrPk5IBAAMCAAN4AAM7BA" # file_id de l'image GUERRE
 IMAGE_TOWER = ""     # file_id de l'image TOUR
 IMAGE_BUILD = ""     # file_id de l'image CONSTRUCTION
 
