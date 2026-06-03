@@ -51,6 +51,42 @@ def get_id(message):
         bot.reply_to_message(message, "Réponds à une image avec /getid.")
 
 # ============================
+#   /GETID2 — SANS RÉPONDRE
+# ============================
+
+last_photo_id = {}
+
+@bot.message_handler(content_types=['photo'])
+def detect_photo(message: Message):
+    chat_id = message.chat.id
+    file_id = message.photo[-1].file_id
+    last_photo_id[chat_id] = file_id  # on stocke la dernière image reçue
+    caption = message.caption.lower() if message.caption else ""
+
+    if "/all" in caption:
+        bot.send_photo(chat_id, file_id, caption=get_admin_mentions(chat_id))
+        return
+
+    if "/tower" in caption:
+        bot.send_photo(chat_id, IMAGE_TOWER, caption=get_admin_mentions(chat_id))
+        return
+
+    if "/build" in caption:
+        bot.send_photo(chat_id, IMAGE_BUILD, caption=get_admin_mentions(chat_id))
+        return
+
+    bot.reply_to(message, "📸 Image reçue !")
+
+@bot.message_handler(commands=['getid2'])
+def get_id2(message):
+    chat_id = message.chat.id
+    if chat_id in last_photo_id:
+        bot.reply_to(message, f"File ID : {last_photo_id[chat_id]}")
+    else:
+        bot.reply_to(message, "Aucune image reçue récemment.")
+
+
+# ============================
 #   /START
 # ============================
 
