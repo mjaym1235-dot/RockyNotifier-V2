@@ -114,14 +114,27 @@ def start(message: Message):
 @bot.message_handler(commands=['war'])
 def war_cmd(message: Message):
     chat_id = message.chat.id
-    text = (
-        "🟥🟥🟥  G U E R R E  🟥🟥🟥\n"
-        "🟥🟥🟥  G U E R R A  🟥🟥🟥\n\n"
-        "🔥 La bataille commence maintenant.\n"
-        "🔥 La battaglia inizia adesso.\n\n"
-        + get_admin_mentions(chat_id)
+    full = message.text
+
+    # On enlève la commande /war mais on garde tout le reste
+    cleaned = full.replace("/war", "").strip()
+
+    # Texte de base
+    alert = (
+        "  G U E R R E  \n"
+        "  G U E R R A  \n\n"
+        f"{get_admin_mentions(chat_id)}"
     )
-    bot.send_photo(chat_id, IMAGE_WAR, caption=text)
+
+    # Si tu ajoutes un texte → on le met en mode ALERTE VISUELLE
+    if cleaned:
+        cleaned = cleaned.upper()  # Majuscules
+        cleaned = f" {cleaned} "
+        final_text = f"{cleaned}\n\n{alert}"
+    else:
+        final_text = alert
+
+    bot.send_photo(chat_id, IMAGE_WAR, caption=final_text, parse_mode="Markdown")
 
 @bot.message_handler(commands=['command'])
 def command_list(message: Message):
@@ -145,7 +158,20 @@ def command_list(message: Message):
 @bot.message_handler(commands=['all'])
 def mention_all(message: Message):
     chat_id = message.chat.id
-    bot.send_message(chat_id, get_admin_mentions(chat_id))
+    full = message.text
+
+    # On enlève la commande /all mais on garde tout le reste
+    cleaned = full.replace("/all", "").strip()
+
+    mentions = get_admin_mentions(chat_id)
+
+    # Combine texte avant + mentions + texte après
+    if cleaned:
+        final_text = f"{cleaned}\n{mentions}"
+    else:
+        final_text = mentions
+
+    bot.send_message(chat_id, final_text)
 
 @bot.message_handler(commands=['tower'])
 def tower(message: Message):
