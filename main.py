@@ -8,7 +8,7 @@ TOKEN = "8982899307:AAEFJQmjcT2JnnUOqizbMFlxMVGbWG-B8-0"
 bot = telebot.TeleBot(TOKEN)
 
 # ============================
-#   IMAGES (À REMPLIR PLUS TARD)
+#   IMAGES (À REMPLIR AVEC FILE_ID)
 # ============================
 
 IMAGE_WAR = ""       # file_id de l'image GUERRE
@@ -20,14 +20,35 @@ IMAGE_BUILD = ""     # file_id de l'image CONSTRUCTION
 # ============================
 
 def get_admin_mentions(chat_id):
-    members = bot.get_chat_administrators(chat_id)
-    text = "👑 Mention des admins :\n"
-    for m in members:
-        if m.user.username:
-            text += f"@{m.user.username}\n"
-        else:
-            text += f"{m.user.first_name}\n"
-    return text
+    try:
+        chat = bot.get_chat(chat_id)
+        if chat.type not in ["group", "supergroup"]:
+            return ""  # Pas d’admins en privé
+
+        members = bot.get_chat_administrators(chat_id)
+        text = "👑 Mention des admins :\n"
+        for m in members:
+            if m.user.username:
+                text += f"@{m.user.username}\n"
+            else:
+                text += f"{m.user.first_name}\n"
+        return text
+
+    except Exception as e:
+        print(f"Erreur get_admin_mentions: {e}")
+        return ""
+
+# ============================
+#   /GETID — DOIT ÊTRE AVANT LE HANDLER TEXTE
+# ============================
+
+@bot.message_handler(commands=['getid'])
+def get_id(message):
+    if message.reply_to_message and message.reply_to_message.photo:
+        file_id = message.reply_to_message.photo[-1].file_id
+        bot.reply_to_message(message, f"File ID : {file_id}")
+    else:
+        bot.reply_to_message(message, "Réponds à une image avec /getid.")
 
 # ============================
 #   /START
@@ -130,22 +151,18 @@ def detect_photo(message: Message):
     file_id = message.photo[-1].file_id
     caption = message.caption.lower() if message.caption else ""
 
-    # IMAGE + /all
     if "/all" in caption:
         bot.send_photo(chat_id, file_id, caption=get_admin_mentions(chat_id))
         return
 
-    # IMAGE + /tower
     if "/tower" in caption:
         bot.send_photo(chat_id, IMAGE_TOWER, caption=get_admin_mentions(chat_id))
         return
 
-    # IMAGE + /build
     if "/build" in caption:
         bot.send_photo(chat_id, IMAGE_BUILD, caption=get_admin_mentions(chat_id))
         return
 
-    # IMAGE SIMPLE
     bot.reply_to(message, "📸 Image reçue !")
 
 # ============================
@@ -165,14 +182,6 @@ def detect_text(message: Message):
     bot.reply_to(message, f"💬 Tu as dit : {message.text}")
 
 # ============================
-@bot.message_handler(commands=['getid'])
-def get_id(message):
-    if message.reply_to_message and message.reply_to_message.photo:
-        file_id = message.reply_to_message.photo[-1].file_id
-        bot.reply_to_message(message, f"File ID : {file_id}")
-    else:
-        bot.reply_to_message(message, "Réponds à une image avec /getid.")
-
 #   LANCEMENT DU BOT
 # ============================
 
