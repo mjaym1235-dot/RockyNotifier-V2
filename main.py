@@ -117,21 +117,26 @@ def help_cmd(message: Message):
 # ============================
 
 @bot.message_handler(commands=['command'])
-def command_list(message: Message):
+def command_list(message):
     text = (
         "📜 Commandes disponibles / Comandi disponibili :\n\n"
+        
         "🇫🇷 /start – Vérifier si le bot fonctionne\n"
         "🇫🇷 /help – Alerte guerre (image + FR/ITA + mentions)\n"
         "🇫🇷 /all – Mentionner les admins\n"
-        "🇫🇷 /tower – Infos tour (image + mentions)\n"
-        "🇫🇷 /build – Infos construction (image + mentions)\n\n"
+        "🇫🇷 /tower – Infos tours (image + mentions)\n"
+        "🇫🇷 /cap – Zones capturables (image + mentions)\n"
+        "🇫🇷 /war – Alerte courte\n\n"
+        
         "🇮🇹 /start – Verificare se il bot funziona\n"
         "🇮🇹 /help – Allerta guerra (immagine + FR/ITA + menzioni)\n"
         "🇮🇹 /all – Menzionare gli admin\n"
-        "🇮🇹 /tower – Info torre (immagine + menzioni)\n"
-        "🇮🇹 /build – Info costruzione (immagine + menzioni)\n"
+        "🇮🇹 /tower – Info torri (immagine + menzioni)\n"
+        "🇮🇹 /cap – Zone catturabili (immagine + menzioni)\n"
+        "🇮🇹 /war – Allerta breve\n"
     )
     bot.reply_to(message, text)
+
 
 # ============================
 #   /ALL — MENTION DES ADMINS
