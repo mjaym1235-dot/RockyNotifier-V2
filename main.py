@@ -1,5 +1,5 @@
 # -----------------------------
-#   ROCKY NOTIFIER BOT – WEBHOOK (VERSION FINALE)
+#   ROCKY NOTIFIER BOT – WEBHOOK (VERSION FINALE FR/IT)
 # -----------------------------
 
 import telebot
@@ -189,12 +189,19 @@ def tower(message: Message):
 @bot.message_handler(commands=['command'])
 def command_list(message: Message):
     text = (
-        "📜 Commandes disponibles :\n\n"
-        "/war – Alerte guerre\n"
-        "/cap – Capture\n"
-        "/all – Mention admins\n"
-        "/tower – Infos tours\n"
-        "/cap – Zones capturables\n"
+        "📜 Commandes disponibles / Comandi disponibili :\n\n"
+        
+        "🇫🇷 /start – Vérifier si le bot fonctionne\n"
+        "🇫🇷 /war – Alerte guerre (image + FR/ITA + mentions)\n"
+        "🇫🇷 /all – Mentionner les admins (texte avant/après possible)\n"
+        "🇫🇷 /tower – Infos tours (image + mentions)\n"
+        "🇫🇷 /cap – Capture (image + mentions + texte optionnel)\n\n"
+        
+        "🇮🇹 /start – Verificare se il bot funziona\n"
+        "🇮🇹 /war – Allerta guerra (immagine + FR/ITA + menzioni)\n"
+        "🇮🇹 /all – Menzionare gli admin (testo prima/dopo possibile)\n"
+        "🇮🇹 /tower – Info torri (immagine + menzioni)\n"
+        "🇮🇹 /cap – Cattura (immagine + menzioni + testo opzionale)\n"
     )
     bot.reply_to(message, text)
 
@@ -231,6 +238,7 @@ if __name__ == "__main__":
     bot.set_webhook(url=WEBHOOK_URL)
 
     app.run(host='0.0.0.0', port=8080)
+
 
 
 
