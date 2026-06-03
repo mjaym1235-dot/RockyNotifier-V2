@@ -4,7 +4,7 @@ from telebot.types import Message
 # ============================
 #   TOKEN
 # ============================
-TOKEN = "8982899307:AAEFJQmjcT2JnnUOqizbMFlxMVGbWG-B8-0"  # Remets ton token ici
+TOKEN = "8982899307:AAEFJQmjcT2JnnUOqizbMFlxMVGbWG-B8-0"  # Remets ton vrai token ici
 bot = telebot.TeleBot(TOKEN)
 
 # ============================
@@ -39,7 +39,7 @@ def get_admin_mentions(chat_id):
         return ""
 
 # ============================
-#   /GETID
+#   /GETID — RÉPONSE À UNE IMAGE
 # ============================
 
 @bot.message_handler(commands=['getid'])
@@ -98,7 +98,7 @@ def start(message: Message):
     bot.reply_to(message, "Bot opérationnel ! 👌\nUtilise /command pour voir les commandes.")
 
 # ============================
-#   /WAR — (ANCIEN /HELP)
+#   /WAR — ALERTE GUERRE (EX-HELP)
 # ============================
 
 @bot.message_handler(commands=['war'])
@@ -133,7 +133,67 @@ def command_list(message: Message):
         "🇮🇹 /start – Verificare se il bot funziona\n"
         "🇮🇹 /war – Allerta guerra (immagine + FR/ITA + menzioni)\n"
         "🇮🇹 /all – Menzionare gli admin\n"
-        "🇮🇹
+        "🇮🇹 /tower – Info torri (immagine + menzioni)\n"
+        "🇮🇹 /cap – Zone catturabili (immagine + menzioni)\n"
+    )
+    bot.reply_to(message, text)
+
+# ============================
+#   /ALL
+# ============================
+
+@bot.message_handler(commands=['all'])
+def mention_all(message: Message):
+    chat_id = message.chat.id
+    bot.send_message(chat_id, get_admin_mentions(chat_id))
+
+# ============================
+#   /TOWER
+# ============================
+
+@bot.message_handler(commands=['tower'])
+def tower(message: Message):
+    chat_id = message.chat.id
+    text = "🗼 Tour / Torre :\n" + get_admin_mentions(chat_id)
+    bot.send_photo(chat_id, IMAGE_TOWER, caption=text)
+
+# ============================
+#   /CAP
+# ============================
+
+@bot.message_handler(commands=['cap'])
+def cap(message: Message):
+    chat_id = message.chat.id
+    text = "🏗️ Capture en cours / Cattura in corso :\n" + get_admin_mentions(chat_id)
+    bot.send_photo(chat_id, IMAGE_CAP, caption=text)
+
+# ============================
+#   STICKERS
+# ============================
+
+@bot.message_handler(content_types=['sticker'])
+def detect_sticker(message: Message):
+    bot.reply_to(message, "✨ Sticker reçu !")
+
+# ============================
+#   TEXTE
+# ============================
+
+@bot.message_handler(content_types=['text'])
+def detect_text(message: Message):
+    bot.reply_to(message, f"💬 Tu as dit : {message.text}")
+
+# ============================
+#   LANCEMENT DU BOT
+# ============================
+
+print("Bot lancé…")
+
+if __name__ == "__main__":
+    print("Bot opérationnel")
+    bot.infinity_polling(timeout=60, long_polling_timeout=60)
+
+
 
 
 
