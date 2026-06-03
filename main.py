@@ -4,7 +4,7 @@ from telebot.types import Message
 # ============================
 #   TOKEN
 # ============================
-TOKEN = "8982899307:AAEFJQmjcT2JnnUOqizbMFlxMVGbWG-B8-0"  # remets ton vrai token ici
+TOKEN = "TON_TOKEN_ICI"  # Remets ton token ici
 bot = telebot.TeleBot(TOKEN)
 
 # ============================
@@ -23,7 +23,7 @@ def get_admin_mentions(chat_id):
     try:
         chat = bot.get_chat(chat_id)
         if chat.type not in ["group", "supergroup"]:
-            return ""  # Pas d’admins en privé
+            return ""
 
         members = bot.get_chat_administrators(chat_id)
         text = "👑 Mention des admins :\n"
@@ -39,7 +39,7 @@ def get_admin_mentions(chat_id):
         return ""
 
 # ============================
-#   /GETID — RÉPONSE À UNE IMAGE
+#   /GETID
 # ============================
 
 @bot.message_handler(commands=['getid'])
@@ -51,20 +51,20 @@ def get_id(message: Message):
         bot.reply_to(message, "Réponds à une image avec /getid.")
 
 # ============================
-#   /GETID2 — DERNIÈRE IMAGE REÇUE
+#   /GETID2 — DERNIÈRE IMAGE
 # ============================
 
 last_photo_id = {}
 
 # ============================
-#   DÉTECTION D’IMAGES + COMMANDES
+#   DÉTECTION D’IMAGES
 # ============================
 
 @bot.message_handler(content_types=['photo'])
 def detect_photo(message: Message):
     chat_id = message.chat.id
     file_id = message.photo[-1].file_id
-    last_photo_id[chat_id] = file_id  # on stocke la dernière image reçue
+    last_photo_id[chat_id] = file_id
     caption = message.caption.lower() if message.caption else ""
 
     if "/all" in caption:
@@ -98,11 +98,11 @@ def start(message: Message):
     bot.reply_to(message, "Bot opérationnel ! 👌\nUtilise /command pour voir les commandes.")
 
 # ============================
-#   /HELP — GUERRE FR/ITA + ALL
+#   /WAR — (ANCIEN /HELP)
 # ============================
 
-@bot.message_handler(commands=['help'])
-def help_cmd(message: Message):
+@bot.message_handler(commands=['war'])
+def war_cmd(message: Message):
     chat_id = message.chat.id
 
     text = (
@@ -116,20 +116,6 @@ def help_cmd(message: Message):
     bot.send_photo(chat_id, IMAGE_WAR, caption=text)
 
 # ============================
-#   /WAR — ALERTE COURTE
-# ============================
-
-@bot.message_handler(commands=['war'])
-def war_alert(message: Message):
-    chat_id = message.chat.id
-    text = (
-        "🟥 GUERRE / GUERRA 🟥\n"
-        "⚔️ Alerte courte / Allerta breve\n\n"
-        + get_admin_mentions(chat_id)
-    )
-    bot.send_photo(chat_id, IMAGE_WAR, caption=text)
-
-# ============================
 #   /COMMAND — LISTE FR + ITA
 # ============================
 
@@ -139,84 +125,15 @@ def command_list(message: Message):
         "📜 Commandes disponibles / Comandi disponibili :\n\n"
         
         "🇫🇷 /start – Vérifier si le bot fonctionne\n"
-        "🇫🇷 /help – Alerte guerre (image + FR/ITA + mentions)\n"
+        "🇫🇷 /war – Alerte guerre (image + FR/ITA + mentions)\n"
         "🇫🇷 /all – Mentionner les admins\n"
         "🇫🇷 /tower – Infos tours (image + mentions)\n"
-        "🇫🇷 /cap – Zones capturables (image + mentions)\n"
-        "🇫🇷 /war – Alerte courte\n\n"
+        "🇫🇷 /cap – Zones capturables (image + mentions)\n\n"
         
         "🇮🇹 /start – Verificare se il bot funziona\n"
-        "🇮🇹 /help – Allerta guerra (immagine + FR/ITA + menzioni)\n"
+        "🇮🇹 /war – Allerta guerra (immagine + FR/ITA + menzioni)\n"
         "🇮🇹 /all – Menzionare gli admin\n"
-        "🇮🇹 /tower – Info torri (immagine + menzioni)\n"
-        "🇮🇹 /cap – Zone catturabili (immagine + menzioni)\n"
-        "🇮🇹 /war – Allerta breve\n"
-    )
-    bot.reply_to(message, text)
-
-# ============================
-#   /ALL — MENTION DES ADMINS
-# ============================
-
-@bot.message_handler(commands=['all'])
-def mention_all(message: Message):
-    chat_id = message.chat.id
-    bot.send_message(chat_id, get_admin_mentions(chat_id))
-
-# ============================
-#   /TOWER — IMAGE + TEXTE + ALL
-# ============================
-
-@bot.message_handler(commands=['tower'])
-def tower(message: Message):
-    chat_id = message.chat.id
-
-    text = (
-        "🗼 Tour / Torre :\n"
-        + get_admin_mentions(chat_id)
-    )
-    bot.send_photo(chat_id, IMAGE_TOWER, caption=text)
-
-# ============================
-#   /CAP — IMAGE + TEXTE + ALL
-# ============================
-
-@bot.message_handler(commands=['cap'])
-def cap(message: Message):
-    chat_id = message.chat.id
-
-    text = (
-        "🏗️ Capture en cours / Cattura in corso :\n"
-        + get_admin_mentions(chat_id)
-    )
-
-    bot.send_photo(chat_id, IMAGE_CAP, caption=text)
-
-# ============================
-#   DÉTECTION DE STICKERS
-# ============================
-
-@bot.message_handler(content_types=['sticker'])
-def detect_sticker(message: Message):
-    bot.reply_to(message, "✨ Sticker reçu !")
-
-# ============================
-#   DÉTECTION DE TEXTE
-# ============================
-
-@bot.message_handler(content_types=['text'])
-def detect_text(message: Message):
-    bot.reply_to(message, f"💬 Tu as dit : {message.text}")
-
-# ============================
-#   LANCEMENT DU BOT
-# ============================
-
-print("Bot lancé…")
-
-if __name__ == "__main__":
-    print("Bot opérationnel")
-    bot.infinity_polling(timeout=60, long_polling_timeout=60)
+        "🇮🇹
 
 
 
