@@ -12,7 +12,7 @@ import time
 # ============================
 #   TOKEN
 # ============================
-TOKEN = ""
+TOKEN = "8982899307:AAEFJQmjcT2JnnUOqizbMFlxMVGbWG-B8-0"
 bot = telebot.TeleBot(TOKEN)
 
 WEBHOOK_URL = "https://rockynotifier-v2-1.onrender.com/webhook"
