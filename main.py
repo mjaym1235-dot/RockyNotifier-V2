@@ -12,7 +12,7 @@ import time
 # ============================
 #   TOKEN
 # ============================
-TOKEN = "8982899307:AAEFJQmjcT2JnnUOqizbMFlxMVGbWG-B8-0"
+TOKEN = ""
 bot = telebot.TeleBot(TOKEN)
 
 WEBHOOK_URL = "https://rockynotifier-v2-1.onrender.com/webhook"
@@ -112,13 +112,15 @@ def start(message: Message):
     bot.reply_to(message, "Bot opérationnel ! 👌\nUtilise /command pour voir les commandes.")
 
 # ============================
-#   /WAR — VERSION HTML
+#   /WAR — TEXTE AVANT + APRÈS
 # ============================
 @bot.message_handler(commands=['war'])
 def war_cmd(message: Message):
     chat_id = message.chat.id
     full = message.text
-    cleaned = full.replace("/war", "").strip()
+
+    parts = full.split("/war")
+    cleaned = " ".join(p.strip() for p in parts if p.strip())
 
     alert = (
         "🟥🟥🟥  <b>G U E R R E</b>  🟥🟥🟥\n"
@@ -136,13 +138,15 @@ def war_cmd(message: Message):
     bot.send_photo(chat_id, IMAGE_WAR, caption=final_text, parse_mode="HTML")
 
 # ============================
-#   /CAP — VERSION HTML (ÉTOILES)
+#   /CAP — TEXTE AVANT + APRÈS
 # ============================
 @bot.message_handler(commands=['cap'])
 def cap(message: Message):
     chat_id = message.chat.id
     full = message.text
-    cleaned = full.replace("/cap", "").strip()
+
+    parts = full.split("/cap")
+    cleaned = " ".join(p.strip() for p in parts if p.strip())
 
     base = (
         "⭐ <b>C A P T U R E</b> ⭐\n"
@@ -166,7 +170,9 @@ def cap(message: Message):
 def mention_all(message: Message):
     chat_id = message.chat.id
     full = message.text
-    cleaned = full.replace("/all", "").strip()
+
+    parts = full.split("/all")
+    cleaned = " ".join(p.strip() for p in parts if p.strip())
 
     mentions = get_admin_mentions(chat_id)
 
@@ -178,33 +184,50 @@ def mention_all(message: Message):
     bot.send_message(chat_id, final_text)
 
 # ============================
-#   AUTRES COMMANDES
+#   /TOWER — TEXTE AVANT + APRÈS
 # ============================
 @bot.message_handler(commands=['tower'])
 def tower(message: Message):
     chat_id = message.chat.id
-    text = "🗼 Tour / Torre :\n" + get_admin_mentions(chat_id)
-    bot.send_photo(chat_id, IMAGE_TOWER, caption=text)
+    full = message.text
 
+    parts = full.split("/tower")
+    cleaned = " ".join(p.strip() for p in parts if p.strip())
+
+    base = "🗼 Tour / Torre :\n" + get_admin_mentions(chat_id)
+
+    if cleaned:
+        final_text = f"{cleaned}\n\n{base}"
+    else:
+        final_text = base
+
+    bot.send_photo(chat_id, IMAGE_TOWER, caption=final_text)
+
+# ============================
+#   /COMMAND — LISTE PROPRE
+# ============================
 @bot.message_handler(commands=['command'])
 def command_list(message: Message):
     text = (
         "📜 Commandes disponibles / Comandi disponibili :\n\n"
         
         "🇫🇷 /start – Vérifier si le bot fonctionne\n"
-        "🇫🇷 /war – Alerte guerre (image + FR/ITA + mentions)\n"
-        "🇫🇷 /all – Mentionner les admins (texte avant/après possible)\n"
-        "🇫🇷 /tower – Infos tours (image + mentions)\n"
-        "🇫🇷 /cap – Capture (image + mentions + texte optionnel)\n\n"
+        "🇫🇷 /war – Alerte guerre\n"
+        "🇫🇷 /all – Mentionner les admins\n"
+        "🇫🇷 /tower – Infos tours\n"
+        "🇫🇷 /cap – Capture\n\n"
         
         "🇮🇹 /start – Verificare se il bot funziona\n"
-        "🇮🇹 /war – Allerta guerra (immagine + FR/ITA + menzioni)\n"
-        "🇮🇹 /all – Menzionare gli admin (testo prima/dopo possibile)\n"
-        "🇮🇹 /tower – Info torri (immagine + menzioni)\n"
-        "🇮🇹 /cap – Cattura (immagine + menzioni + testo opzionale)\n"
+        "🇮🇹 /war – Allerta guerra\n"
+        "🇮🇹 /all – Menzionare gli admin\n"
+        "🇮🇹 /tower – Info torri\n"
+        "🇮🇹 /cap – Cattura\n"
     )
     bot.reply_to(message, text)
 
+# ============================
+#   AUTRES
+# ============================
 @bot.message_handler(content_types=['sticker'])
 def detect_sticker(message: Message):
     bot.reply_to(message, "✨ Sticker reçu !")
@@ -238,6 +261,7 @@ if __name__ == "__main__":
     bot.set_webhook(url=WEBHOOK_URL)
 
     app.run(host='0.0.0.0', port=8080)
+
 
 
 
