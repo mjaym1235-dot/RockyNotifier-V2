@@ -118,10 +118,9 @@ def start(message: Message):
 @bot.message_handler(func=lambda m: m.text and "/war" in m.text.lower())
 def war_cmd(message: Message):
     chat_id = message.chat.id
-    full = message.text
+    text = message.text
 
-    parts = full.split("/war")
-    cleaned = " ".join(p.strip() for p in parts if p.strip())
+    cleaned = text.replace("/war", "").strip()
 
     alert = (
         "🟥🟥🟥  <b>G U E R R E</b>  🟥🟥🟥\n"
@@ -144,10 +143,9 @@ def war_cmd(message: Message):
 @bot.message_handler(func=lambda m: m.text and "/cap" in m.text.lower())
 def cap(message: Message):
     chat_id = message.chat.id
-    full = message.text
+    text = message.text
 
-    parts = full.split("/cap")
-    cleaned = " ".join(p.strip() for p in parts if p.strip())
+    cleaned = text.replace("/cap", "").strip()
 
     base = (
         "⭐ <b>C A P T U R E</b> ⭐\n"
@@ -190,10 +188,9 @@ def mention_all(message: Message):
 @bot.message_handler(func=lambda m: m.text and "/tower" in m.text.lower())
 def tower(message: Message):
     chat_id = message.chat.id
-    full = message.text
+    text = message.text
 
-    parts = full.split("/tower")
-    cleaned = " ".join(p.strip() for p in parts if p.strip())
+    cleaned = text.replace("/tower", "").strip()
 
     base = "🗼 Tour / Torre :\n" + get_admin_mentions(chat_id)
 
