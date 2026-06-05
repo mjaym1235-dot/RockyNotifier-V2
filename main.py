@@ -170,10 +170,10 @@ def cap(message: Message):
 @bot.message_handler(func=lambda m: m.text and "/all" in m.text.lower())
 def mention_all(message: Message):
     chat_id = message.chat.id
-    full = message.text
+    text = message.text
 
-    parts = full.split("/all")
-    cleaned = " ".join(p.strip() for p in parts if p.strip())
+    # On retire juste le mot /all, sans split compliqué
+    cleaned = text.replace("/all", "").strip()
 
     mentions = get_admin_mentions(chat_id)
 
