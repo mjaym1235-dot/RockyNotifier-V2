@@ -75,6 +75,28 @@ def get_id(message: Message):
 # ============================
 last_photo_id = {}
 
+# ============================
+#   /ALL — COMMANDE + TEXTE APRÈS  (PLACÉ AU BON ENDROIT)
+# ============================
+@bot.message_handler(commands=['all'])
+def mention_all(message: Message):
+    chat_id = message.chat.id
+    parts = message.text.split(maxsplit=1)
+    cleaned = parts[1] if len(parts) > 1 else ""
+    cleaned = cleaned.strip()
+
+    mentions = get_admin_mentions(chat_id)
+
+    if cleaned:
+        final_text = f"{cleaned}\n{mentions}"
+    else:
+        final_text = mentions
+
+    bot.send_message(chat_id, final_text)
+
+# ============================
+#   HANDLER PHOTO (LÉGENDES)
+# ============================
 @bot.message_handler(content_types=['photo'])
 def detect_photo(message: Message):
     chat_id = message.chat.id
@@ -87,12 +109,12 @@ def detect_photo(message: Message):
         bot.send_photo(chat_id, file_id, caption=get_admin_mentions(chat_id))
         return
 
-    # /tower en légende → image tour + mentions
+    # /tower en légende
     if "/tower" in caption:
         bot.send_photo(chat_id, IMAGE_TOWER, caption=get_admin_mentions(chat_id))
         return
 
-    # /cap en légende → image capture + mentions
+    # /cap en légende
     if "/cap" in caption:
         bot.send_photo(chat_id, IMAGE_CAP, caption=get_admin_mentions(chat_id))
         return
@@ -164,25 +186,6 @@ def cap(message: Message):
         final_text = base
 
     bot.send_photo(chat_id, IMAGE_CAP, caption=final_text, parse_mode="HTML")
-
-# ============================
-#   /ALL — COMMANDE + TEXTE APRÈS
-# ============================
-@bot.message_handler(commands=['all'])
-def mention_all(message: Message):
-    chat_id = message.chat.id
-    parts = message.text.split(maxsplit=1)
-    cleaned = parts[1] if len(parts) > 1 else ""
-    cleaned = cleaned.strip()
-
-    mentions = get_admin_mentions(chat_id)
-
-    if cleaned:
-        final_text = f"{cleaned}\n{mentions}"
-    else:
-        final_text = mentions
-
-    bot.send_message(chat_id, final_text)
 
 # ============================
 #   /TOWER — COMMANDE + TEXTE APRÈS
@@ -262,6 +265,7 @@ if __name__ == "__main__":
     bot.set_webhook(url=WEBHOOK_URL)
 
     app.run(host='0.0.0.0', port=8080)
+
 
 
 
