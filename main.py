@@ -33,9 +33,9 @@ threading.Thread(target=keep_alive, daemon=True).start()
 # ============================
 #   IMAGES (FILE_ID)
 # ============================
-IMAGE_WAR = "AgACAgQAAxkBAAMXah_MDQX4s5kTHdtT3wkfsLQaEtQAAgsOaxtCV_lQbciX-WrPk5IBAAMCAAN4AAM7BA"
+IMAGE_WAR = "AgACAgQAAxkBAAIBRGoieVoINpYAAWee5L57XNHasJPfYwACUA5rGzf6GFE5C0vSeYELVAEAAwIAA3kAAzsE"
 IMAGE_TOWER = "AgACAgQAAxkBAAM9ah_Rk8dMLVS5PBlCtQ138HBEXbIAAg8OaxtCV_lQ9Pmok24OOQ0BAAMCAANtAAM7BA"
-IMAGE_CAP = "AgACAgQAAxkBAANBah_Y2KOjhTeoD0lgRxOPFlOKmIwAAhUOaxtCV_lQLTOTg-NKrkgBAAMCAAN4AAM7BA"
+IMAGE_CAP = " AgACAgQAAxkBAAIBQGoieS-IN1Mhbhqc03YAAWCy9qvWRwACTw5rGzf6GFFVn0TtPETBDgEAAwIAA3kAAzsE"
 
 # ============================
 #   FONCTION MENTION ADMINS
@@ -114,7 +114,7 @@ def start(message: Message):
 # ============================
 #   /WAR — TEXTE AVANT + APRÈS
 # ============================
-@bot.message_handler(commands=['war'])
+@bot.message_handler(func=lambda m: m.text and "/war" in m.text)
 def war_cmd(message: Message):
     chat_id = message.chat.id
     full = message.text
@@ -140,7 +140,7 @@ def war_cmd(message: Message):
 # ============================
 #   /CAP — TEXTE AVANT + APRÈS
 # ============================
-@bot.message_handler(commands=['cap'])
+@bot.message_handler(func=lambda m: m.text and "/cap" in m.text)
 def cap(message: Message):
     chat_id = message.chat.id
     full = message.text
@@ -166,7 +166,7 @@ def cap(message: Message):
 # ============================
 #   /ALL — TEXTE AVANT + APRÈS
 # ============================
-@bot.message_handler(commands=['all'])
+@bot.message_handler(func=lambda m: m.text and "/all" in m.text)
 def mention_all(message: Message):
     chat_id = message.chat.id
     full = message.text
@@ -186,7 +186,7 @@ def mention_all(message: Message):
 # ============================
 #   /TOWER — TEXTE AVANT + APRÈS
 # ============================
-@bot.message_handler(commands=['tower'])
+@bot.message_handler(func=lambda m: m.text and "/tower" in m.text)
 def tower(message: Message):
     chat_id = message.chat.id
     full = message.text
@@ -232,7 +232,7 @@ def command_list(message: Message):
 def detect_sticker(message: Message):
     bot.reply_to(message, "✨ Sticker reçu !")
 
-@bot.message_handler(content_types=['text'])
+@bot.message_handler(func=lambda m: m.text and not m.text.startswith("/"))
 def detect_text(message: Message):
     bot.reply_to(message, f"💬 Tu as dit : {message.text}")
 
@@ -261,6 +261,7 @@ if __name__ == "__main__":
     bot.set_webhook(url=WEBHOOK_URL)
 
     app.run(host='0.0.0.0', port=8080)
+
 
 
 
