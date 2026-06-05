@@ -231,13 +231,9 @@ def command_list(message: Message):
 # ============================
 
 # IMPORTANT : placé TOUT EN BAS pour ne rien bloquer
-@bot.message_handler(
-    func=lambda m: m.text
-    and not any(cmd in m.text.lower() for cmd in ["/war", "/cap", "/all", "/tower"])
-    and not m.text.startswith("/")
-)
-def detect_text(message: Message):
-    bot.reply_to(message, f"💬 Tu as dit : {message.text}")
+@bot.message_handler(func=lambda m: False)
+def ignore(message):
+    pass
 
 @bot.message_handler(content_types=['sticker'])
 def detect_sticker(message: Message):
