@@ -162,7 +162,7 @@ def cap(message: Message):
 
     bot.send_photo(chat_id, IMAGE_CAP, caption=final_text, parse_mode="HTML")
 
-# ============================
+# ===========================
 #   /ALL — TEXTE AVANT + APRÈS
 # ============================
 @bot.message_handler(func=lambda m: m.text and "/all" in m.text.lower())
@@ -170,9 +170,7 @@ def mention_all(message: Message):
     chat_id = message.chat.id
     text = message.text
 
-    # On retire juste le mot /all, sans split compliqué
     cleaned = text.replace("/all", "").strip()
-
     mentions = get_admin_mentions(chat_id)
 
     if cleaned:
@@ -181,6 +179,7 @@ def mention_all(message: Message):
         final_text = mentions
 
     bot.send_message(chat_id, final_text)
+
 
 # ============================
 #   /TOWER — TEXTE AVANT + APRÈS
