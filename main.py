@@ -35,7 +35,7 @@ threading.Thread(target=keep_alive, daemon=True).start()
 # ============================
 IMAGE_WAR = "AgACAgQAAxkBAAIBRGoieVoINpYAAWee5L57XNHasJPfYwACUA5rGzf6GFE5C0vSeYELVAEAAwIAA3kAAzsE"
 IMAGE_TOWER = "AgACAgQAAxkBAAM9ah_Rk8dMLVS5PBlCtQ138HBEXbIAAg8OaxtCV_lQ9Pmok24OOQ0BAAMCAANtAAM7BA"
-IMAGE_CAP = " AgACAgQAAxkBAAIBQGoieS-IN1Mhbhqc03YAAWCy9qvWRwACTw5rGzf6GFFVn0TtPETBDgEAAwIAA3kAAzsE"
+IMAGE_CAP = "AgACAgQAAxkBAAIBQGoieS-IN1Mhbhqc03YAAWCy9qvWRwACTw5rGzf6GFFVn0TtPETBDgEAAwIAA3kAAzsE"
 
 # ============================
 #   FONCTION MENTION ADMINS
@@ -232,7 +232,8 @@ def command_list(message: Message):
 def detect_sticker(message: Message):
     bot.reply_to(message, "✨ Sticker reçu !")
 
-@bot.message_handler(func=lambda m: m.text and not m.text.startswith("/"))
+# IMPORTANT : ce handler NE DOIT PAS prendre les messages contenant une commande
+@bot.message_handler(func=lambda m: m.text and not any(cmd in m.text for cmd in ["/war", "/cap", "/all", "/tower"]) and not m.text.startswith("/"))
 def detect_text(message: Message):
     bot.reply_to(message, f"💬 Tu as dit : {message.text}")
 
