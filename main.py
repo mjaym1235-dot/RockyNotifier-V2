@@ -107,6 +107,7 @@ def get_id2(message: Message):
 # ============================
 #   COMMANDES
 # ============================
+
 @bot.message_handler(commands=['start'])
 def start(message: Message):
     bot.reply_to(message, "Bot opérationnel ! 👌\nUtilise /command pour voir les commandes.")
@@ -228,14 +229,15 @@ def command_list(message: Message):
 # ============================
 #   AUTRES
 # ============================
-@bot.message_handler(content_types=['sticker'])
-def detect_sticker(message: Message):
-    bot.reply_to(message, "✨ Sticker reçu !")
 
-# IMPORTANT : ce handler NE DOIT PAS prendre les messages contenant une commande
+# IMPORTANT : placé TOUT EN BAS pour ne rien bloquer
 @bot.message_handler(func=lambda m: m.text and not any(cmd in m.text for cmd in ["/war", "/cap", "/all", "/tower"]) and not m.text.startswith("/"))
 def detect_text(message: Message):
     bot.reply_to(message, f"💬 Tu as dit : {message.text}")
+
+@bot.message_handler(content_types=['sticker'])
+def detect_sticker(message: Message):
+    bot.reply_to(message, "✨ Sticker reçu !")
 
 # ============================
 #   FLASK (WEBHOOK)
@@ -262,6 +264,7 @@ if __name__ == "__main__":
     bot.set_webhook(url=WEBHOOK_URL)
 
     app.run(host='0.0.0.0', port=8080)
+
 
 
 
