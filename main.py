@@ -115,12 +115,14 @@ def start(message: Message):
 # ============================
 #   /WAR — TEXTE AVANT + APRÈS
 # ============================
-@bot.message_handler(func=lambda m: m.text and "/war" in m.text.lower())
+@bot.message_handler(commands=['war'])
 def war_cmd(message: Message):
     chat_id = message.chat.id
-    text = message.text
+    text = message.text or ""
 
-    cleaned = text.replace("/war", "").strip()
+    parts = text.split(maxsplit=1)
+    cleaned = parts[1] if len(parts) > 1 else ""
+    cleaned = cleaned.strip()
 
     alert = (
         "🟥🟥🟥  <b>G U E R R E</b>  🟥🟥🟥\n"
@@ -140,12 +142,14 @@ def war_cmd(message: Message):
 # ============================
 #   /CAP — TEXTE AVANT + APRÈS
 # ============================
-@bot.message_handler(func=lambda m: m.text and "/cap" in m.text.lower())
+@bot.message_handler(commands=['cap'])
 def cap(message: Message):
     chat_id = message.chat.id
-    text = message.text
+    text = message.text or ""
 
-    cleaned = text.replace("/cap", "").strip()
+    parts = text.split(maxsplit=1)
+    cleaned = parts[1] if len(parts) > 1 else ""
+    cleaned = cleaned.strip()
 
     base = (
         "⭐ <b>C A P T U R E</b> ⭐\n"
@@ -180,16 +184,17 @@ def mention_all(message: Message):
 
     bot.send_message(chat_id, final_text)
 
-
 # ============================
 #   /TOWER — TEXTE AVANT + APRÈS
 # ============================
-@bot.message_handler(func=lambda m: m.text and "/tower" in m.text.lower())
+@bot.message_handler(commands=['tower'])
 def tower(message: Message):
     chat_id = message.chat.id
-    text = message.text
+    text = message.text or ""
 
-    cleaned = text.replace("/tower", "").strip()
+    parts = text.split(maxsplit=1)
+    cleaned = parts[1] if len(parts) > 1 else ""
+    cleaned = cleaned.strip()
 
     base = "🗼 Tour / Torre :\n" + get_admin_mentions(chat_id)
 
