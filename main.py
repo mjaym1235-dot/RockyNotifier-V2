@@ -113,14 +113,12 @@ def start(message: Message):
     bot.reply_to(message, "Bot opérationnel ! 👌\nUtilise /command pour voir les commandes.")
 
 # ============================
-#   /WAR — TEXTE AVANT + APRÈS
+#   /WAR — COMMANDE + TEXTE APRÈS
 # ============================
 @bot.message_handler(commands=['war'])
 def war_cmd(message: Message):
     chat_id = message.chat.id
-    text = message.text or ""
-
-    parts = text.split(maxsplit=1)
+    parts = message.text.split(maxsplit=1)
     cleaned = parts[1] if len(parts) > 1 else ""
     cleaned = cleaned.strip()
 
@@ -140,14 +138,12 @@ def war_cmd(message: Message):
     bot.send_photo(chat_id, IMAGE_WAR, caption=final_text, parse_mode="HTML")
 
 # ============================
-#   /CAP — TEXTE AVANT + APRÈS
+#   /CAP — COMMANDE + TEXTE APRÈS
 # ============================
 @bot.message_handler(commands=['cap'])
 def cap(message: Message):
     chat_id = message.chat.id
-    text = message.text or ""
-
-    parts = text.split(maxsplit=1)
+    parts = message.text.split(maxsplit=1)
     cleaned = parts[1] if len(parts) > 1 else ""
     cleaned = cleaned.strip()
 
@@ -166,15 +162,16 @@ def cap(message: Message):
 
     bot.send_photo(chat_id, IMAGE_CAP, caption=final_text, parse_mode="HTML")
 
-# ===========================
-#   /ALL — TEXTE AVANT + APRÈS
 # ============================
-@bot.message_handler(func=lambda m: m.text and "/all" in m.text.lower())
+#   /ALL — COMMANDE + TEXTE APRÈS
+# ============================
+@bot.message_handler(commands=['all'])
 def mention_all(message: Message):
     chat_id = message.chat.id
-    text = message.text
+    parts = message.text.split(maxsplit=1)
+    cleaned = parts[1] if len(parts) > 1 else ""
+    cleaned = cleaned.strip()
 
-    cleaned = text.replace("/all", "").strip()
     mentions = get_admin_mentions(chat_id)
 
     if cleaned:
@@ -185,14 +182,12 @@ def mention_all(message: Message):
     bot.send_message(chat_id, final_text)
 
 # ============================
-#   /TOWER — TEXTE AVANT + APRÈS
+#   /TOWER — COMMANDE + TEXTE APRÈS
 # ============================
 @bot.message_handler(commands=['tower'])
 def tower(message: Message):
     chat_id = message.chat.id
-    text = message.text or ""
-
-    parts = text.split(maxsplit=1)
+    parts = message.text.split(maxsplit=1)
     cleaned = parts[1] if len(parts) > 1 else ""
     cleaned = cleaned.strip()
 
@@ -231,7 +226,6 @@ def command_list(message: Message):
 #   AUTRES
 # ============================
 
-# IMPORTANT : placé TOUT EN BAS pour ne rien bloquer
 @bot.message_handler(func=lambda m: False)
 def ignore(message):
     pass
