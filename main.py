@@ -115,7 +115,7 @@ def start(message: Message):
 # ============================
 #   /WAR — TEXTE AVANT + APRÈS
 # ============================
-@bot.message_handler(func=lambda m: m.text and "/war" in m.text)
+@bot.message_handler(func=lambda m: m.text and "/war" in m.text.lower())
 def war_cmd(message: Message):
     chat_id = message.chat.id
     full = message.text
@@ -141,7 +141,7 @@ def war_cmd(message: Message):
 # ============================
 #   /CAP — TEXTE AVANT + APRÈS
 # ============================
-@bot.message_handler(func=lambda m: m.text and "/cap" in m.text)
+@bot.message_handler(func=lambda m: m.text and "/cap" in m.text.lower())
 def cap(message: Message):
     chat_id = message.chat.id
     full = message.text
@@ -167,7 +167,7 @@ def cap(message: Message):
 # ============================
 #   /ALL — TEXTE AVANT + APRÈS
 # ============================
-@bot.message_handler(func=lambda m: m.text and "/all" in m.text)
+@bot.message_handler(func=lambda m: m.text and "/all" in m.text.lower())
 def mention_all(message: Message):
     chat_id = message.chat.id
     full = message.text
@@ -187,7 +187,7 @@ def mention_all(message: Message):
 # ============================
 #   /TOWER — TEXTE AVANT + APRÈS
 # ============================
-@bot.message_handler(func=lambda m: m.text and "/tower" in m.text)
+@bot.message_handler(func=lambda m: m.text and "/tower" in m.text.lower())
 def tower(message: Message):
     chat_id = message.chat.id
     full = message.text
@@ -231,7 +231,11 @@ def command_list(message: Message):
 # ============================
 
 # IMPORTANT : placé TOUT EN BAS pour ne rien bloquer
-@bot.message_handler(func=lambda m: m.text and not any(cmd in m.text for cmd in ["/war", "/cap", "/all", "/tower"]) and not m.text.startswith("/"))
+@bot.message_handler(
+    func=lambda m: m.text
+    and not any(cmd in m.text.lower() for cmd in ["/war", "/cap", "/all", "/tower"])
+    and not m.text.startswith("/")
+)
 def detect_text(message: Message):
     bot.reply_to(message, f"💬 Tu as dit : {message.text}")
 
@@ -264,6 +268,7 @@ if __name__ == "__main__":
     bot.set_webhook(url=WEBHOOK_URL)
 
     app.run(host='0.0.0.0', port=8080)
+
 
 
 
