@@ -26,7 +26,7 @@ def keep_alive():
             requests.get("https://rockynotifier-v2-1.onrender.com/")
         except:
             pass
-        time.sleep(300)
+        time.sleep(60)
 
 threading.Thread(target=keep_alive, daemon=True).start()
 
