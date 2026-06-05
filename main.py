@@ -82,14 +82,17 @@ def detect_photo(message: Message):
     last_photo_id[chat_id] = file_id
     caption = message.caption.lower() if message.caption else ""
 
+    # /all en légende → renvoie la même image + mentions
     if "/all" in caption:
         bot.send_photo(chat_id, file_id, caption=get_admin_mentions(chat_id))
         return
 
+    # /tower en légende → image tour + mentions
     if "/tower" in caption:
         bot.send_photo(chat_id, IMAGE_TOWER, caption=get_admin_mentions(chat_id))
         return
 
+    # /cap en légende → image capture + mentions
     if "/cap" in caption:
         bot.send_photo(chat_id, IMAGE_CAP, caption=get_admin_mentions(chat_id))
         return
@@ -165,29 +168,21 @@ def cap(message: Message):
 # ============================
 #   /ALL — COMMANDE + TEXTE APRÈS
 # ============================
-@bot.message_handler(content_types=['photo'])
-def detect_photo(message: Message):
+@bot.message_handler(commands=['all'])
+def mention_all(message: Message):
     chat_id = message.chat.id
-    file_id = message.photo[-1].file_id
-    last_photo_id[chat_id] = file_id
-    caption = message.caption.lower() if message.caption else ""
+    parts = message.text.split(maxsplit=1)
+    cleaned = parts[1] if len(parts) > 1 else ""
+    cleaned = cleaned.strip()
 
-    # /all dans une légende d’image → renvoie la même image + mentions
-    if "/all" in caption:
-        bot.send_photo(chat_id, file_id, caption=get_admin_mentions(chat_id))
-        return
+    mentions = get_admin_mentions(chat_id)
 
-    # /tower dans une légende d’image
-    if "/tower" in caption:
-        bot.send_photo(chat_id, IMAGE_TOWER, caption=get_admin_mentions(chat_id))
-        return
+    if cleaned:
+        final_text = f"{cleaned}\n{mentions}"
+    else:
+        final_text = mentions
 
-    # /cap dans une légende d’image
-    if "/cap" in caption:
-        bot.send_photo(chat_id, IMAGE_CAP, caption=get_admin_mentions(chat_id))
-        return
-
-    bot.reply_to(message, "📸 Image reçue !")
+    bot.send_message(chat_id, final_text)
 
 # ============================
 #   /TOWER — COMMANDE + TEXTE APRÈS
@@ -267,6 +262,7 @@ if __name__ == "__main__":
     bot.set_webhook(url=WEBHOOK_URL)
 
     app.run(host='0.0.0.0', port=8080)
+
 
 
 
